@@ -1,19 +1,22 @@
-const express = requiere ('express');
-const cors = requiere ('cors');
-const app = express();
+// Importamos los módulos necesarios para crear el servidor y manejar CORS
+const express = require ('express'); 
+const cors = require ('cors'); 
 
-app.use(express.json());
-app.use(cors());
+const app = express(); // Se crea una instancia de la aplicación Express
 
-//importar rutas
-const userRoutes = requiere ('./routers/user.routers)');
-const authRoutes = requiere ('./routers/auth.routers)');
-const projectRoutes = requiere ('./routers/project.routers)');
+// Configuración para permitir que la aplicación procese JSON y evitar problemas de CORS
+app.use(express.json()); // Habilita el uso de JSON en las peticiones
+app.use(cors()); // Permite solicitudes de otros dominios
 
-//nos habilita las rutas
-app.use('/api/v1/users',userRoutes);
-app.use('/api/v1/auth',authRoutes);
-app.use('/api/v1/projects',projectRoutes);
+// Importar rutas para manejar usuarios, autenticación y proyectos
+const userRoutes = require ('./routers/user.routers'); 
+const authRoutes = require ('./routers/auth.routers'); 
+const projectRoutes = require ('./routers/project.routers');
 
-//exportamos la instancia de la aplicacion
-Module.exports= app;
+// Definimos las rutas de la API y las asociamos a los archivos correspondientes
+app.use('/api/v1/users', userRoutes); // Ruta para los usuarios
+app.use('/api/v1/auth', authRoutes); // Ruta para autenticación
+app.use('/api/v1/projects', projectRoutes); // Ruta para proyectos
+
+// Exportamos la instancia de la aplicación para que pueda ser utilizada en otros archivos
+module.exports = app; 

@@ -1,22 +1,40 @@
-const {DataTypes} = requiere ('sequializer');
-const sequalize= requiere ('../config/database');
+// Importa DataTypes desde Sequelize 
+const { DataTypes } = require('sequelize'); 
 
-const rols_permissions = sequalize.define('rols_permissions',{
-    id: { type:Datatype.INTEGER, primarykey:true, autoIncrement:true},
-    rol_id: {
-        type:Datatype.INTEGER,
-        allowNull:false,
-        reference: {model:'rols_permissions', key:'id'}
+// Importa la conexión a la base de datos desde el archivo de configuración 
+const sequalize = require('../config/database'); 
+
+// Define el modelo 'rols_permissions' en Sequelize
+const rols_permissions = sequalize.define('rols_permissions', {
+
+    // Define la columna 'id' como clave primaria, entera y autoincremental
+    id: { 
+        type: DataTypes.INTEGER,
+        primaryKey: true, 
+        autoIncrement: true 
     },
-    permission_id: {
-        type:Datatype.INTEGER,
-        allowNull:false,
-        references:{model:'permissions', key: 'id'} 
+
+    // Define la columna 'rol_id' como clave foránea referenciada a 'rols_permissions' 
+    rol_id: { 
+        type: DataTypes.INTEGER,
+        allowNull: false, 
+        references: { model: 'rols_permissions', key: 'id' }
+    },
+
+    // Define la columna 'permission_id' como clave foránea referenciada a 'permissions'
+    permission_id: { 
+        type: DataTypes.INTEGER, 
+        allowNull: false, 
+        references: { model: 'permissions', key: 'id' } 
     }
 
-},{
-    timestamps:false,
-    tableName:'rols_permissions',
+}, {
+    // Desactiva las marcas de tiempo automáticas en Sequelize
+    timestamps: false, 
+
+    // Define el nombre de la tabla en la base de datos
+    tableName: 'rols_permissions',
 });
 
-Module.exports = rols_permissions;
+// Exporta el modelo 'rols_permissions' 
+module.exports = rols_permissions;

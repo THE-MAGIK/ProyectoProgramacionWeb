@@ -1,23 +1,31 @@
-const sequelize = require('_/config/database');
-const app = requiere ('./app');
-const dotenv = requiere ('dotenv');
-requiere('./models/associations');
+// Importamos los módulos necesarios
+const sequelize = require('./config/database');
+const app = require ('./app');
+const dotenv = require ('dotenv'); 
+require('./models/associations'); 
 
-dotenv.config();
+dotenv.config(); // Carga las variables de entorno desde el archivo .env
 
-const PORT = process.env.PORT || 5432;
+// Definimos el puerto en el que correrá el servidor, usando el de entorno o 5432 (que es un puerto de PostgreSQL, no de un servidor web)
+const PORT = process.env.PORT || 3000; 
 
+// Intentamos autenticar la conexión con la base de datos
 sequelize.authenticate()
     .then(() => {
         console.log('Conectado a PostgreSQL con Sequelize');
+        
+        // Iniciamos el servidor en el puerto especificado
         app.listen(PORT, () => {
-            console.log('Servidor corriendo en http://localhost:${PORT}');
+            console.log(`Servidor corriendo en http://localhost:${PORT}`);
         });
     })
-    . catch(err => console.error('Error conectando a la abse de datos:', err));
+    .catch(err => console.error('Error conectando a la base de datos:', err));
 
-    sequelize.sync({force:false}).then(()=> {
+// Sincronizamos la base de datos sin forzar la recreación de tablas
+sequelize.sync({force: false})
+    .then(() => {
         console.log('Base de datos sincronizada');
-    }).catch(err=> {
-        console.error('Error al sincronizar la base de datos:',err);
+    })
+    .catch(err => {
+        console.error('Error al sincronizar la base de datos:', err);
     });
