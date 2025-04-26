@@ -9,14 +9,14 @@ app.use(express.json()); // Habilita el uso de JSON en las peticiones
 app.use(cors()); // Permite solicitudes de otros dominios
 
 // Importar rutas para manejar usuarios, autenticación y proyectos
-const userRoutes = require ('./routers/user.routers'); 
-const authRoutes = require ('./routers/auth.routers'); 
-const projectRoutes = require ('./routers/project.routers');
+const userRoutes = require ('./routes/user.routes'); 
+const authRoutes = require ('./routes/auth.routes'); 
+const proyectRoutes = require ('./routes/proyect.routes');
 
 // Definimos las rutas de la API y las asociamos a los archivos correspondientes
-app.use('/api/v1/users', userRoutes); // Ruta para los usuarios
+app.use('/api/v1', userRoutes); // Ruta para los usuarios
 app.use('/api/v1/auth', authRoutes); // Ruta para autenticación
-app.use('/api/v1/projects', projectRoutes); // Ruta para proyectos
+app.use('/api/v1/projects', proyectRoutes); // Ruta para proyectos
 
 // Exportamos la instancia de la aplicación para que pueda ser utilizada en otros archivos
 module.exports = app; 

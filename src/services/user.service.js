@@ -1,8 +1,8 @@
-const user = require('../model/user.model'); 
+const user = require('../models/user.model'); 
 const bcrypt = require('bcryptjs'); 
 
 // Función para crear un usuario
-exports.creatUser = async (name, email, password, rol_id, administrator_id) => {
+exports.createUser = async (name, email, password, rol_id, administrator_id) => {
     try{
         // Verificar si el usuario ya existe
         const userExists = await user.findOne({where : { email }}); 

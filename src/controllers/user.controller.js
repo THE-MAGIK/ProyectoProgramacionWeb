@@ -76,7 +76,7 @@ exports.updateUser = async (req, res) => {
 };
 
 // Controlador para eliminar un usuario
-exports.deleteUsers = async (req, res) => {
+exports.deleteUser = async (req, res) => {
     // Obtiene el ID del usuario a eliminar desde los parámetros de la URL
     const { id } = req.params;
 

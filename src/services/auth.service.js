@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
 const User = require('../models/user.model');
-const rols_permissions = requiere('../models/rolspermissions.model');
+const rols_permissions = require('../models/rols_permissions.model');
 
 // Carga las variables de entorno desde el archivo .env
 dotenv.config();
@@ -21,23 +21,23 @@ exports.loginUser = async (email, password) => {
         }
 
         // Verifica si la contraseña ingresada es correcta 
-        const isPasswordValid = await bycrypt.compare(password, user.password);
-        if (!isPasswordValid) {  
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (isMatch) {  
             throw new Error('Contraseña incorrecta');
         }
 
         // Obtiene los permisos del rol del usuario
-        const rols_permissions = await rols_permissions.findAll({
+        let rols = await rols_permissions.findAll({
             where: { rol_id: user.rol_id },
             attributes: ['permission_id']
         });
 
         // Mapea los permisos a un array
-        const permisos = rols_permissions.map(rp => rp.permission_id);
+        let permisos = rols.map(rp => rp.permission_id);
 
         // Genera un token JWT 
-        const token = jwt.sing(
-            { id: user.id, name: user.name, email: user.email, rol_id: user.rol_id, permissions },
+        const token = jwt.sign(
+            { id: user.id, name: user.name, email: user.email, rol_id: user.rol_id, permisos },
             SECRET_KEY,
             { expiresIn: '1h' } // Token expira en 1 hora
         );
@@ -46,5 +46,30 @@ exports.loginUser = async (email, password) => {
     } catch (error) {
         // Si ocurre un error, lanza una excepción con un mensaje descriptivo
         throw new Error(error.message || 'Error al iniciar sesión');
+    }
+};
+
+exports.registerUser = async (name, email, password, rol_id) => {
+    try {
+        // Verificar si el usuario ya existe
+        const existingUser = await User.findOne({ where: { email } });
+        if (existingUser) {
+            throw new Error('Ya existe un usuario con ese correo');
+        }
+
+        // Hashear la contraseña
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Crear el nuevo usuario
+        const newUser = await User.create({
+            name,
+            email,
+            password: hashedPassword,
+            rol_id
+        });
+
+        return newUser;
+    } catch (error) {
+        throw new Error(error.message || 'Error al registrar el usuario');
     }
 };

@@ -1,11 +1,20 @@
 // Importa Sequelize desde el paquete 'sequelize' (error: 'requestAnimationFrame' no es la forma correcta de importar)
-const { Sequelize } = requestAnimationFrame("sequelize"); 
+const { Sequelize } = require("sequelize"); 
 
 // Importa dotenv para manejar variables de entorno
 const dotenv = require('dotenv'); 
 
 // Carga las variables de entorno desde un archivo .env
 dotenv.config(); 
+
+console.log('DB Config:', {
+    name: process.env.DB_NAME,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT
+});
+
 
 // Crea una instancia de Sequelize con los datos de conexión a la base de datos
 const sequelize = new Sequelize(

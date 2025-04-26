@@ -1,11 +1,14 @@
 // Importa DataTypes desde Sequelize 
 const { DataTypes } = require('sequelize'); 
 
+const User = require('./user.model'); // Ajusta la ruta si es necesario
+
+
 // Importa la conexión a la base de datos desde el archivo de configuración 
-const sequalize = require('../config/database'); 
+const sequelize = require('../config/database'); 
 
 // Define el modelo 'proyects' en Sequelize
-const proyects = sequalize.define('proyects', {
+const proyects = sequelize.define('proyects', {
 
     // Define la columna 'id' como clave primaria, entera y autoincremental
     id: { 
@@ -56,6 +59,9 @@ const proyects = sequalize.define('proyects', {
         }
     }
 });
+
+proyects.belongsTo(User, {foreignKey: 'userid'});
+User.hasMany(proyects, {foreignKey: 'userid'});
 
 // Exporta el modelo 'proyects' 
 module.exports = proyects; 

@@ -2,7 +2,7 @@
 const sequelize = require('./config/database');
 const app = require ('./app');
 const dotenv = require ('dotenv'); 
-require('./models/associations'); 
+require('./models/association'); 
 
 dotenv.config(); // Carga las variables de entorno desde el archivo .env
 
