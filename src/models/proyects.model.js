@@ -60,8 +60,6 @@ const proyects = sequelize.define('proyects', {
     }
 });
 
-proyects.belongsTo(User, {foreignKey: 'userid'});
-User.hasMany(proyects, {foreignKey: 'userid'});
 
 // Exporta el modelo 'proyects' 
 module.exports = proyects; 

@@ -28,11 +28,12 @@ exports.getProyectById = async (req, res) => {
 exports.createproyect = async (req, res) => {
     try {
         const proyectData = req.body; // Datos del nuevo proyecto
-        const newProyect = await proyectService.createProyect(proyectData); // Llama al servicio para crearlo
+        const newProyect = await proyectService.createproyect(proyectData); // Llama al servicio para crearlo
         res.status(201).json(newProyect); // Responde con el proyecto creado
     } catch (error) {
         res.status(400).json({ message: error.message }); // Error en la petición
     }
+
 };
 
 // Obtiene todos los proyectos

@@ -16,7 +16,7 @@ const proyectRoutes = require ('./routes/proyect.routes');
 // Definimos las rutas de la API y las asociamos a los archivos correspondientes
 app.use('/api/v1', userRoutes); // Ruta para los usuarios
 app.use('/api/v1/auth', authRoutes); // Ruta para autenticación
-app.use('/api/v1/projects', proyectRoutes); // Ruta para proyectos
+app.use('/api/v1/proyects', proyectRoutes); // Ruta para proyectos
 
 // Exportamos la instancia de la aplicación para que pueda ser utilizada en otros archivos
 module.exports = app; 

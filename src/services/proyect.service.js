@@ -1,24 +1,26 @@
-const { User, Proyect } = require('../models');
+const  {ROLS} = require('../utils/constants');
+const Proyects = require('../models/proyects.model');
 
-// Crear proyecto
+
 exports.createproyect = async (data) => {
-    const proyect = await Proyect.create(data);
+    console.log('Datos recibidos en el servicio:', data); // Log para depurar
+    const proyect = await Proyects.create(data);
+    console.log('Proyecto creado en la base de datos:', proyect); // Log para confirmar la inserción
     return proyect;
 };
 
-// Obtener todos los proyectos
 exports.getAllproyects = async () => {
     try {
-        const proyects = await Proyect.findAll({
+        const proyects = await proyects.findAll({
             include: [
                 {
-                    model: User,
+                    model: users,
                     as: 'administrator',
                     attributes: ['id', 'name']
                 },
                 {
-                    model: User,
-                    as: 'proyectusers', // nombre del alias usado en la asociación
+                    model: users,
+                    as: 'users',
                     attributes: ['id', 'name', 'email'],
                     through: { attributes: [] }
                 }
@@ -31,21 +33,8 @@ exports.getAllproyects = async () => {
     }
 };
 
-// Obtener proyectos por ID de usuario (opcional si lo vas a usar)
-exports.getproyectsByuserId = async (user_id) => {
-    const user = await User.findByPk(user_id, {
-        include: {
-            model: Proyect,
-            as: 'userproyects',
-            through: { attributes: [] }
-        }
-    });
+exports.getproyectsByuserId = async (user_id) => { };
 
-    if (!user) throw new Error('Usuario no encontrado');
-    return user.userproyects;
-};
-
-// Asignar usuarios a proyecto
 exports.assignUsersToProyect = async (data) => {
     const proyect = await Proyect.findByPk(data.proyectId);
     if (!proyect) throw new Error('Proyecto no encontrado');
@@ -53,12 +42,12 @@ exports.assignUsersToProyect = async (data) => {
     const users = await User.findAll({ where: { id: data.userIds } });
     if (users.length !== data.userIds.length) throw new Error('Algunos usuarios no fueron encontrados');
 
-    await proyect.addProyectusers(users); // usa el alias correcto
+    await proyect.addUsuarios(users);
     return await Proyect.findByPk(data.proyectId, {
         include: [
             {
                 model: User,
-                as: 'proyectusers',
+                as: 'users',
                 attributes: ['id', 'name', 'email'],
                 through: { attributes: [] }
             }
@@ -66,7 +55,6 @@ exports.assignUsersToProyect = async (data) => {
     });
 };
 
-// Remover usuario del proyecto
 exports.removeUserFromProyect = async (data) => {
     const proyect = await Proyect.findByPk(data.proyectid);
     if (!proyect) throw new Error('Proyecto no encontrado');
@@ -74,10 +62,9 @@ exports.removeUserFromProyect = async (data) => {
     const user = await User.findByPk(data.userid);
     if (!user) throw new Error('Usuario no encontrado');
 
-    await proyect.removeProyectuser(user); // alias correcto en singular
+    await proyect.removeUsuario(user);
 };
 
-// Actualizar proyecto
 exports.updateProyect = async (data) => {
     const proyect = await Proyect.findByPk(data.proyectid);
     if (!proyect) throw new Error('Proyecto no encontrado');
@@ -86,7 +73,6 @@ exports.updateProyect = async (data) => {
     return proyect;
 };
 
-// Eliminar proyecto
 exports.deleteProyect = async (id) => {
     const proyect = await Proyect.findByPk(id);
     if (!proyect) throw new Error('Proyecto no encontrado');
@@ -95,13 +81,12 @@ exports.deleteProyect = async (id) => {
     return { message: 'Proyecto eliminado correctamente' };
 };
 
-// Obtener proyecto por ID
 exports.getProyect = async (id) => {
     const proyect = await Proyect.findByPk(id, {
         include: [
             {
-                model: User,
-                as: 'proyectusers',
+                model: user,
+                as: 'users',
                 attributes: ['id', 'name', 'email'],
                 through: { attributes: [] }
             }
