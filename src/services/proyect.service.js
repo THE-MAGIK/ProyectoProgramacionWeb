@@ -1,6 +1,6 @@
 const  {ROLS} = require('../utils/constants');
 const Proyects = require('../models/proyects.model');
-
+const User = require('../models/user.model');
 
 exports.createproyect = async (data) => {
     console.log('Datos recibidos en el servicio:', data); // Log para depurar
@@ -9,18 +9,18 @@ exports.createproyect = async (data) => {
     return proyect;
 };
 
-exports.getAllproyects = async () => {
+exports.getAllProyects = async () => {
     try {
-        const proyects = await proyects.findAll({
+        const proyects = await Proyects.findAll({
             include: [
                 {
-                    model: users,
+                    model: User,
                     as: 'administrator',
                     attributes: ['id', 'name']
                 },
                 {
-                    model: users,
-                    as: 'users',
+                    model: User,
+                    as: 'proyectusers',
                     attributes: ['id', 'name', 'email'],
                     through: { attributes: [] }
                 }
@@ -36,14 +36,14 @@ exports.getAllproyects = async () => {
 exports.getproyectsByuserId = async (user_id) => { };
 
 exports.assignUsersToProyect = async (data) => {
-    const proyect = await Proyect.findByPk(data.proyectId);
+    const proyect = await Proyects.findByPk(data.proyectId);
     if (!proyect) throw new Error('Proyecto no encontrado');
 
     const users = await User.findAll({ where: { id: data.userIds } });
     if (users.length !== data.userIds.length) throw new Error('Algunos usuarios no fueron encontrados');
 
     await proyect.addUsuarios(users);
-    return await Proyect.findByPk(data.proyectId, {
+    return await Proyects.findByPk(data.proyectId, {
         include: [
             {
                 model: User,
@@ -56,7 +56,7 @@ exports.assignUsersToProyect = async (data) => {
 };
 
 exports.removeUserFromProyect = async (data) => {
-    const proyect = await Proyect.findByPk(data.proyectid);
+    const proyect = await Proyects.findByPk(data.proyectid);
     if (!proyect) throw new Error('Proyecto no encontrado');
 
     const user = await User.findByPk(data.userid);
@@ -65,16 +65,19 @@ exports.removeUserFromProyect = async (data) => {
     await proyect.removeUsuario(user);
 };
 
-exports.updateProyect = async (data) => {
-    const proyect = await Proyect.findByPk(data.proyectid);
+exports.updateProyect = async (proyectid, data) => {
+    console.log('ID del proyecto a actualizar:', proyectid); // Verifica el ID que llega
+
+    const proyect = await Proyects.findByPk(proyectid);
     if (!proyect) throw new Error('Proyecto no encontrado');
 
     await proyect.update(data);
     return proyect;
 };
 
+
 exports.deleteProyect = async (id) => {
-    const proyect = await Proyect.findByPk(id);
+    const proyect = await Proyects.findByPk(id);
     if (!proyect) throw new Error('Proyecto no encontrado');
 
     await proyect.destroy();
@@ -82,7 +85,7 @@ exports.deleteProyect = async (id) => {
 };
 
 exports.getProyect = async (id) => {
-    const proyect = await Proyect.findByPk(id, {
+    const proyect = await Proyects.findByPk(id, {
         include: [
             {
                 model: user,

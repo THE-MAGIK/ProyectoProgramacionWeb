@@ -49,20 +49,17 @@ exports.getAllProyects = async (req, res) => {
 // Actualiza un proyecto existente por ID
 exports.updateProyect = async (req, res) => {
     try {
-        const { id } = req.params; // ID del proyecto a actualizar
-        const proyectData = req.body; // Nuevos datos del proyecto
+        const id = parseInt(req.params.id, 10); // Forzar a número
+        const proyectData = req.body;
 
-        const updatedProyect = await proyectService.updateProyect(id, proyectData); // Llama al servicio para actualizar
+        const updatedProyect = await proyectService.updateProyect(id, proyectData);
 
-        if (!updatedProyect) {
-            return res.status(404).json({ message: 'Proyecto no encontrado' }); // No se encontró el proyecto
-        }
-
-        res.status(200).json({ message: 'Proyecto actualizado correctamente', proyect: updatedProyect }); // Proyecto actualizado
+        res.status(200).json({ message: 'Proyecto actualizado correctamente', proyect: updatedProyect });
     } catch (error) {
-        res.status(500).json({ message: error.message }); // Error de servidor
+        res.status(500).json({ message: error.message });
     }
 };
+
 
 // Elimina un proyecto por ID
 exports.deleteProyect = async (req, res) => {
