@@ -1,0 +1,43 @@
+<div>
+  <!-- Left Sidebar -->
+  <aside id="leftsidebar" class="sidebar" (mouseenter)="mouseHover()" (mouseleave)="mouseOut()">
+    <!-- Menu -->
+    <div class="menu">
+      <ng-scrollbar [style.height]="listMaxHeight + 'px'" visibility="hover">
+        <ul class="list">
+          <li class="sidebar-user-panel">
+            <div class="user-panel">
+              <div class=" image">
+                <img src="https://www.bing.com/images/search?view=detailV2&ccid=gTCPpZsI&id=C40E5571039C7F08315A24E2382CDA2DF435EEEA&thid=OIP.gTCPpZsIPRuvkKFzlmKwywHaHa&mediaurl=https%3a%2f%2fth.bing.com%2fth%2fid%2fR.81308fa59b083d1baf90a1739662b0cb%3frik%3d6u419C3aLDjiJA%26riu%3dhttp%253a%252f%252fpm1.aminoapps.com%252f6949%252f2e303b8acd045ab3048a5c1888770252896b5797r1-900-900v2_uhq.jpg%26ehk%3dKISpElwLq%252bc3rlLrA6chkadVvhMPD0O5mvEX5l2aWXk%253d%26risl%3d%26pid%3dImgRaw%26r%3d0&exph=900&expw=900&q=imagen+random&simid=608008937466507072&FORM=IRPRST&ck=894EF9E6AAB3F42304D46D5141493253&selectedIndex=1&itb=0&ajaxhist=0&ajaxserp=0" class="img-circle user-img-circle" alt="User Image" />
+              </div>
+            </div>
+            <div class="profile-usertitle">
+              <div class="sidebar-userpic-name">{{ userLogged }}</div>
+            </div>
+            <br>
+          </li>
+          <!-- Top Most level menu -->
+          @for (sidebarItem of sidebarItems; track sidebarItem) {
+          <li [routerLinkActive]="sidebarItem.submenu.length !== 0 ? 'active' : 'active-top'">
+            @if (sidebarItem.groupTitle === true) {
+            <div class="header" [innerHTML]="sanitizeHtml(sidebarItem.title)"></div>
+            }
+            @if (!sidebarItem.groupTitle;) {
+            <a [routerLink]="sidebarItem.class === '' ? [sidebarItem.path] : null" [ngClass]="[sidebarItem.class]"
+              (click)="callToggleMenu($event, sidebarItem.submenu.length)" class="menu-top">
+              <i [ngClass]="[sidebarItem.iconType]">{{sidebarItem.icon}}</i>
+              <span class="hide-menu" [innerHTML]="sanitizeHtml(sidebarItem.title)"></span>
+              @if (sidebarItem.badge !== '' ) {
+              <span [ngClass]="[sidebarItem.badgeClass]" [innerHTML]="sanitizeHtml(sidebarItem.badge)"></span>
+              }
+            </a>
+            }   
+          </li>
+          }
+        </ul>
+      </ng-scrollbar>
+    </div>
+    <!-- #Menu -->
+  </aside>
+  <!-- #END# Left Sidebar -->
+</div>
