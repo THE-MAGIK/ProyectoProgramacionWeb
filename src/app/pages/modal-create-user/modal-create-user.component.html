@@ -1,0 +1,110 @@
+<!-- Contenedor principal del formulario de creación de usuarios -->
+<div class="col-lg-12 col-md-12 col-sm-12">
+
+    <!-- Título del modal -->
+    <h2 mat-dialog-title>Creación de Usuarios</h2>
+
+    <!-- Cuerpo del diálogo (donde va el formulario) -->
+    <div mat-dialog-content>
+        <!-- Formulario reactivo conectado a formCreateUser -->
+        <form [formGroup]="formCreateUser">
+
+            <!-- Espacio general del formulario con margen superior -->
+            <div class="col-lg-12 col-md-12 col-sm-12 custom-margin mt-4">
+
+                <!-- Fila para nombre y correo electrónico -->
+                <div class="row">
+
+                    <!-- Campo: Nombre -->
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <mat-form-field class="w-100" appearance="outline">
+                            <mat-label>Nombre</mat-label>
+                            <input matInput formControlName="nombre">
+                        </mat-form-field>
+                    </div>              
+
+                    <!-- Campo: Correo electrónico -->
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <mat-form-field class="w-100" appearance="outline">
+                            <mat-label>Correo electrónico</mat-label>
+                            <input matInput formControlName="email">
+                        </mat-form-field>
+                    </div>
+
+                </div>
+
+                <!-- Fila para contraseña y confirmación -->
+                <div class="row">
+
+                    <!-- Campo: Contraseña -->
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <mat-form-field class="w-100" appearance="outline">
+                            <mat-label>Contraseña</mat-label>
+                            <input matInput formControlName="password" type="password">
+                        </mat-form-field>
+                    </div>              
+
+                    <!-- Campo: Confirmar contraseña -->
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <mat-form-field class="w-100" appearance="outline">
+                            <mat-label>Confirmar Contraseña</mat-label>
+                            <input matInput formControlName="confirmPassword" type="password">
+
+                            <!-- Mensaje de error si las contraseñas no coinciden -->
+                            @if (formCreateUser.get('confirmPassword')?.hasError('invalid')) {
+                                <mat-error>
+                                    Las contraseñas no coinciden
+                                </mat-error>
+                            }
+
+                        </mat-form-field>
+                    </div>
+
+                </div>
+
+                <!-- Fila para seleccionar rol y, si aplica, un administrador -->
+                <div class="row">
+
+                    <!-- Campo: Rol del usuario -->
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <mat-form-field class="w-100" appearance="outline">
+                            <mat-label>Rol</mat-label>
+                            <mat-select formControlName="role" (selectionChange)="onChangeRole($event)">
+                                <mat-option value="" disabled>Seleccionar</mat-option>
+                                <mat-option value="1">Administrador</mat-option>
+                                <mat-option value="2">Usuario</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Campo: Administrador (solo si se debe mostrar, según el rol) -->
+                    <div class="col-lg-6 col-md-6 col-sm-6" *ngIf="showFieldAdministrator">
+                        <mat-form-field class="w-100" appearance="outline">
+                            <mat-label>Administrador</mat-label>
+                            <mat-select formControlName="administrator_id">
+                                <mat-option value="">Seleccionar</mat-option>
+
+                                <!-- Itera sobre la lista de administradores disponibles -->
+                               <mat-option *ngFor="let item of administratorValues" [value]="item.id">{{ item.nombre }}</mat-option>
+                                
+
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+    <!-- Botones de acción del diálogo -->
+    <mat-dialog-actions align="end">
+        <!-- Botón para cerrar sin hacer nada -->
+        <button mat-button mat-dialog-close>Cancelar</button>
+
+        <!-- Botón para enviar el formulario (desactivado si el formulario es inválido) -->
+        <button mat-button cdkFocusInitial [disabled]="formCreateUser.invalid" (click)="onSubmit()">Crear</button>
+    </mat-dialog-actions>
+
+</div>
